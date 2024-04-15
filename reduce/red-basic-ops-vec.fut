@@ -38,7 +38,7 @@ entry red_min_ours [n] (inp : [n]f32) (adj : f32) : [n]f32 =
 
 -- Reduce with scalar multiplication: performance
 -- ==
--- entry: red_mul_prim red_mul_ours red_mul_comp red_mul_comp2
+-- entry: red_mul_prim red_mul_ours red_mul_comp
 -- compiled random input { [10000000]f32 f32 }
 -- compiled random input {[100000000]f32 f32 }
 
@@ -47,12 +47,12 @@ def primal_mul [n] (xs: [n]f32) : f32 = reduce (*) 1.0f32 xs
 entry red_mul_prim [n] (inp : [n]f32) (_adj1 : f32) : f32 =
   primal_mul inp
 
-entry red_mul_comp [n] (inp : [n]f32) (adj : f32) : [n]f32 =
+entry red_mul_comp2 [n] (inp : [n]f32) (adj : f32) : [n]f32 =
   let one = opaque 1.0f32
   let primal = reduce (\ a b -> a * one * b) 1.0f32
   in  vjp primal inp adj
 
-entry red_mul_comp2 [n] (inp : [n]f32) (adj : f32) : [n]f32 =
+entry red_mul_comp [n] (inp : [n]f32) (adj : f32) : [n]f32 =
   reduce_bar 0.0f32 (+) (*) 1.0f32 inp adj
 
 entry red_mul_ours [n] (inp : [n]f32) (adj : f32) : [n]f32 =
