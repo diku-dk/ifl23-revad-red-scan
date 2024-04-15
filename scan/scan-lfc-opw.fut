@@ -6,7 +6,7 @@ import "scan-adj-comp"
 
 -- Scan with linear-function composition: correctness
 -- ==
--- entry: fwd_Jlfc_ours rev_Jlfc_ours rev_Jlfc_comp
+-- entry: rev_Jlfc_ours rev_Jlfc_comp
 -- compiled input { [1.0f32, 2.0f32, 3.0f32, 4.0f32, 5.0f32] 
 --                  [6.0f32, 7.0f32, 8.0f32, 9.0f32, 10.0f32]
 --                }
@@ -55,10 +55,6 @@ let lfc_ne = (0f32, 1f32)
 
 def primal_lfc [n] (xs: [n](f32,f32)) =
   scan lfc lfc_ne xs
-
-entry fwd_Jlfc_ours [n] (a: [n]f32) (b: [n]f32) =
-  tabulate n (\i -> jvp primal_lfc (zip a b) (replicate n (0,0) with [i] = (1,1)))
-  |> transpose |> map unzip |> unzip
 
 entry rev_Jlfc_ours [n] (a: [n]f32) (b: [n]f32) =
   tabulate n (\i -> vjp primal_lfc (zip a b) (replicate n (0,0) with [i] = (1,1)))
